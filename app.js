@@ -1,21 +1,21 @@
+// Press F5 to launch debugger and start API
 const express = require('express')
 
-// Press F5 to launch debugger and start API
-
 const app = express()
+const PORT = 3000
 
 // Demo of all() route
-//---------------------------------------
+// `curl http://localhost:3000` to fire request and see response
+
 // app.all('/', (req, res) => {
 //     console.log('Just got a request!')
 //     res.send('What\'s goody.\n')
 // })
-//---------------------------------------
-// `curl http://localhost:3000` to fire request and see response
 
 
 // Demo of use(express.json) and post() route
-//---------------------------
+// `curl -X POST http://localhost:3000/ -H "Content-Type: application/json" -d '{"name": "Jakob Edelstein"}';` to fire request and see response
+
 app.use(express.json())
 
 app.post('/', (req, res) => {
@@ -23,13 +23,9 @@ app.post('/', (req, res) => {
     res.send(`Hello, ${req.body.name}\n`) // Sending data back to the client
     res.end();
 })
-//---------------------------
-// `curl -X POST http://localhost:3000/ -H "Content-Type: application/json" -d '{"name": "Jakob Edelstein"}';` to fire request and see response
 
 
-
-const PORT = 3000
-
+// Start listening for requests
 app.listen(PORT, (err) => { // Listen with callback function
     if (err) console.log(err);
     console.log('Server listening on PORT: ', PORT)
