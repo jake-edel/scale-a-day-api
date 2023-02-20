@@ -1,18 +1,19 @@
-import conn from '../services/db'
-import AppError from '../utils/appError'
+import conn from '../services/db.js'
+import AppError from '../utils/appError.js'
 
-getAllTodos = (req, res, next) => {
+const getAllTodos = (req, res, next) => {
 	conn.query('SELECT * FROM todolist', (err, data, fields) => {
 		if (err) return next(new Error(err))
 		res.status(200).json({
 			status: 'success',
 			length: data?.length,
-			data: data
+			data: data,
+			controller: 'getAllTodos'
 		})
 	})
 }
 
-createTodo = (req, res, next) => {
+const createTodo = (req, res, next) => {
 	if (!req.body) return next(new AppError('No form data found', 404 ))
 	
 	const values = [req.body.name, "pending"]
@@ -23,13 +24,14 @@ createTodo = (req, res, next) => {
 			if (err) return next(new AppError(err, 500));
 			res.status(201).json({
 				status: 'success',
-				message: 'todo created'
+				message: 'todo created',
+				controller: 'createTodo'
 			})
 		}
 	)
 }
 
-getTodo = (req, res, next) => {
+const getTodo = (req, res, next) => {
 	if (!req.params.id) return next(new AppError('No todo id found', 500))
 	
 	conn.query(
@@ -38,15 +40,16 @@ getTodo = (req, res, next) => {
 		(err, data, fields) => {
 			if (err) return next(new AppError(err, 500))
 			res.status(200).json({
-				status: 'sucess',
+				status: 'sucesss',
 				length: data?.length,
-				data: data
+				data: data,
+				controller: 'getTodo'
 			})
 		}
 	)
 }
 
-updateTodo = (req, res, next) => {
+const updateTodo = (req, res, next) => {
 	if (!req.params.id) return next(new AppError('No todo id found', 404))
 	
 	conn.query(
@@ -56,13 +59,14 @@ updateTodo = (req, res, next) => {
 			if (err) return next(new AppError(err, 500))
 			res.status(201).json({
 				status: 'success',	
-				message: 'todo updated'
+				message: 'todo updated',
+				controller: 'updateTodo'
 			})
 		}
 	)
 }
 
-deleteTodo = (req, res, next) => {
+const deleteTodo = (req, res, next) => {
 	if (!req.params.id) return next(new AppError('No todo id found', 404))
 
 	conn.query(
@@ -72,8 +76,17 @@ deleteTodo = (req, res, next) => {
 			if (err) return next(new AppError(err, 500))
 			res.status(201).json({
 				status: 'success',
-				message: 'todo deleted'
+				message: 'todo deleted',
+				controller: 'deleteTodo'
 			})
 		}
 	)
+}
+
+export default {
+	getAllTodos,
+	createTodo,
+	getTodo,
+	updateTodo,
+	deleteTodo
 }
