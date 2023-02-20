@@ -32,7 +32,9 @@ const createTodo = (req, res, next) => {
 }
 
 const getTodo = (req, res, next) => {
-	if (!req.params.id) return next(new AppError('No todo id found', 500))
+	if (!req.params.id) return next(new AppError('No todo id found', 404))
+
+	if (!Number.isInteger(parseFloat(req.params.id))) return next(new AppError('Todo id must be an integer'), 400)
 	
 	conn.query(
 		'SELECT * FROM todolist WHERE id = ?',
@@ -40,7 +42,7 @@ const getTodo = (req, res, next) => {
 		(err, data, fields) => {
 			if (err) return next(new AppError(err, 500))
 			res.status(200).json({
-				status: 'sucesss',
+				status: 'successs',
 				length: data?.length,
 				data: data,
 				controller: 'getTodo'
@@ -52,6 +54,8 @@ const getTodo = (req, res, next) => {
 const updateTodo = (req, res, next) => {
 	if (!req.params.id) return next(new AppError('No todo id found', 404))
 	
+	if (!Number.isInteger(parseFloat(req.params.id))) return next(new AppError('Todo id must be an integer'), 400)
+
 	conn.query(
 		'UPDATE todolist SET status=\'completed\' WHERE id = ?',
 		[req.params.id],
@@ -68,6 +72,8 @@ const updateTodo = (req, res, next) => {
 
 const deleteTodo = (req, res, next) => {
 	if (!req.params.id) return next(new AppError('No todo id found', 404))
+
+	if (!Number.isInteger(parseFloat(req.params.id))) return next(new AppError('Todo id must be an integer'), 400)
 
 	conn.query(
 		'DELETE FROM todolist WHERE id = ?',
